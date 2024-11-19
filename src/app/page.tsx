@@ -1,101 +1,161 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Pencil, Trash, PlusCircle } from "lucide-react";
+import Link from "next/link";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
+
+// Definindo o tipo Receita
+type Receita = {
+  id: string;
+  titulo: string;
+  tipo: string;
+  num_pessoas: number;
+  nivel_dificuldade: string;
+  lista_ingredientes: string;
+  preparacao: string;
+};
+
+export default function Receita() {
+  const [receitas, setReceitas] = useState<Receita[]>([]); // Tipando o estado de receitas como um array de Receita
+  const [selectedReceita, setSelectedReceita] = useState<Receita | null>(null); // Tipando o estado da receita selecionada
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const router = useRouter();
+
+  // Função para pegar as receitas via GET
+  useEffect(() => {
+    async function fetchReceitas() {
+      const response = await fetch("https://673bc4aa96b8dcd5f3f766c6.mockapi.io/api/receita");  // Substitua com sua URL da API
+      const data = await response.json();
+      setReceitas(data); // Armazena a resposta da API no estado
+    }
+
+    fetchReceitas();
+  }, []);
+
+  // Função para selecionar uma receita do card
+  const handleSelectReceita = (id: string) => {
+    const receita = receitas.find((r) => r.id === id); // Encontrar a receita pela ID
+    if (receita) {
+      setSelectedReceita(receita); // Atualiza o estado com a receita encontrada
+    }
+  };
+
+  const handleEdit = () => {
+    if (selectedReceita) {
+      router.push(`/editar/${selectedReceita.id}`);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedReceita) {
+      try {
+        const response = await fetch(`https://673bc4aa96b8dcd5f3f766c6.mockapi.io/api/receita/${selectedReceita.id}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          setReceitas(receitas.filter(r => r.id !== selectedReceita.id));
+          setSelectedReceita(null);
+        } else {
+          console.error('Failed to delete recipe');
+        }
+      } catch (error) {
+        console.error('Error deleting recipe:', error);
+      }
+    }
+    setIsDeleteDialogOpen(false);
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+    <div className="grid grid-cols-4 gap-4 p-4">
+      <div className="col-span-1">
+        <Link href="/new"><Button size="sm"><PlusCircle /> Cadastrar Receita</Button></Link>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Receita</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {receitas.map((receita) => (
+              <TableRow key={receita.id} onClick={() => handleSelectReceita(receita.id)}>
+                <TableCell className="font-medium">{receita.titulo}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="col-span-3">
+        {selectedReceita ? (
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle>{selectedReceita.titulo.toUpperCase()}</CardTitle>
+                <div className="flex gap-2">
+                  <Button onClick={handleEdit} className="bg-blue-500 w-8 h-8 hover:bg-blue-700"><Pencil className="h-4 w-4" /></Button>
+                  <Button onClick={() => setIsDeleteDialogOpen(true)} className="bg-red-500 w-8 h-8 hover:bg-red-700"><Trash className="h-4 w-4" /></Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div>
+                <div>
+                  <Label>Tipo de Refeição:</Label>
+                  <div>{selectedReceita.tipo}</div>
+                </div>
+                <div>
+                  <Label>N° de Pessoas que serve:</Label>
+                  <div>{selectedReceita.num_pessoas}</div>
+                </div>
+                <div>
+                  <Label>Dificuldade:</Label>
+                  <div>{selectedReceita.nivel_dificuldade}</div>
+                </div>
+                <div>
+                  <Label>Lista de Ingredientes:</Label>
+                  <div>
+                    {selectedReceita.lista_ingredientes}
+                  </div>
+                </div>
+                <div>
+                  <Label>Modo de Preparo:</Label>
+                  <div>{selectedReceita.preparacao}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <div>Selecione uma receita para ver os detalhes.</div>
+        )}
+      </div>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tem certeza que deseja excluir esta receita?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Isso excluirá permanentemente a receita "{selectedReceita?.titulo}".
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-700">Excluir</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
