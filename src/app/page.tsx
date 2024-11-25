@@ -69,14 +69,14 @@ export default function Receita() {
           method: 'DELETE',
         });
         if (response.ok) {
-          // chama novo array de receitas filtrano a excluida
+          // chama novo array de receitas filtrando a excluida
           setReceitas(receitas.filter(r => r.id !== selectedReceita.id));
           setSelectedReceita(null); // limpa a selecionada
         } else {
-          console.error('Failed to delete recipe');
+          console.error('falha ao deletar');
         }
       } catch (error) {
-          console.error('Error deleting recipe:', error);
+          console.error('error:', error);
       }
     }
     setIsDeleteDialogOpen(false);
@@ -154,7 +154,7 @@ export default function Receita() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-700">Excluir</AlertDialogAction>
+              <AlertDialogAction onClick={handleDelete} className="bg-red-500 hover:bg-red-700">Excluir</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

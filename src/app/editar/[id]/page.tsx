@@ -34,7 +34,7 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
   const router = useRouter()
 
   const form = useForm<FormValues>({ // gerencia o estado e validacao do form
-    resolver: zodResolver(formSchema), // resolver intregra o react-hook-form com o zod
+    resolver: zodResolver(formSchema), // zodresolver intregra o react-hook-form com o zod
     defaultValues: {
       titulo: '',
       tipo: '',
