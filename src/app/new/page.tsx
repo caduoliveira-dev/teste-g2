@@ -56,10 +56,10 @@ export default function RecipeForm() {
       }
       form.reset()
     } catch (error) {
-      console.error('Erro ao cadastrar receita:', error)
+        console.error('Erro ao cadastrar receita:', error)
     } finally {
-      setIsSubmitting(false)
-      router.push("/")
+        setIsSubmitting(false)
+        router.push("/")
     }
   }
 

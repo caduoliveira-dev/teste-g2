@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 
-// Definindo o tipo Receita
+// definindo o tipo dde dado Receita
 type Receita = {
   id: string;
   titulo: string;
@@ -31,36 +31,37 @@ type Receita = {
 };
 
 export default function Receita() {
-  const [receitas, setReceitas] = useState<Receita[]>([]); // Tipando o estado de receitas como um array de Receita
-  const [selectedReceita, setSelectedReceita] = useState<Receita | null>(null); // Tipando o estado da receita selecionada
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [receitas, setReceitas] = useState<Receita[]>([]); // array de receitas q virá do get
+  const [selectedReceita, setSelectedReceita] = useState<Receita | null>(null); // armazena a receita atual selecionada
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // controla a abertua/fechamento do dialog
   const router = useRouter();
 
-  // Função para pegar as receitas via GET
   useEffect(() => {
     async function fetchReceitas() {
-      const response = await fetch("https://673bc4aa96b8dcd5f3f766c6.mockapi.io/api/receita");  // Substitua com sua URL da API
+      const response = await fetch("https://673bc4aa96b8dcd5f3f766c6.mockapi.io/api/receita");
       const data = await response.json();
-      setReceitas(data); // Armazena a resposta da API no estado
+      setReceitas(data);
     }
 
     fetchReceitas();
-  }, []);
+  }, []); // efeito para quando o componente é montado
 
-  // Função para selecionar uma receita do card
+  // func para selecionar a receita
   const handleSelectReceita = (id: string) => {
-    const receita = receitas.find((r) => r.id === id); // Encontrar a receita pela ID
+    const receita = receitas.find((r) => r.id === id);
     if (receita) {
-      setSelectedReceita(receita); // Atualiza o estado com a receita encontrada
+      setSelectedReceita(receita);
     }
   };
 
+  // redireciona para a pag de edicao passando o id na url
   const handleEdit = () => {
     if (selectedReceita) {
       router.push(`/editar/${selectedReceita.id}`);
     }
   };
 
+  // realiza a req DELETE para remover a receita da api
   const handleDelete = async () => {
     if (selectedReceita) {
       try {
@@ -68,13 +69,14 @@ export default function Receita() {
           method: 'DELETE',
         });
         if (response.ok) {
+          // chama novo array de receitas filtrano a excluida
           setReceitas(receitas.filter(r => r.id !== selectedReceita.id));
-          setSelectedReceita(null);
+          setSelectedReceita(null); // limpa a selecionada
         } else {
           console.error('Failed to delete recipe');
         }
       } catch (error) {
-        console.error('Error deleting recipe:', error);
+          console.error('Error deleting recipe:', error);
       }
     }
     setIsDeleteDialogOpen(false);

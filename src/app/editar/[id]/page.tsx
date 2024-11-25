@@ -21,19 +21,20 @@ const formSchema = z.object({
   nivel_dificuldade: z.string().min(1, 'Nível de dificuldade é obrigatório'),
   lista_ingredientes: z.string().min(1, 'Lista de ingredientes é obrigatória'),
   preparacao: z.string().min(1, 'Preparação é obrigatória'),
-})
+}) //validacao do form
 
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof formSchema> // tipando os dados do form
 
 export default function EditarReceita({ params }: { params: Promise<{ id: string }> }) {
+  // aguardar a promise seja resolvida para obter o valor do id
   const resolvedParams = use(params)
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const {toast} = useToast()
   const router = useRouter()
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormValues>({ // gerencia o estado e validacao do form
+    resolver: zodResolver(formSchema), // resolver intregra o react-hook-form com o zod
     defaultValues: {
       titulo: '',
       tipo: '',
@@ -44,7 +45,7 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
     },
   })
 
-  useEffect(() => {
+  useEffect(() => { // busca receita pelo id
     const fetchRecipe = async () => {
       try {
         const response = await fetch(`https://673bc4aa96b8dcd5f3f766c6.mockapi.io/api/receita/${resolvedParams.id}`, {
@@ -54,15 +55,15 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
           },
         })
         if (!response.ok) {
-          throw new Error('Failed to fetch recipe')
+          throw new Error('falha ao buscar receita')
         }
         const recipeData = await response.json()
-        form.reset(recipeData)
+        form.reset(recipeData) //preenche o form com o dado vindo do get
       } catch (error) {
-        console.error('Error fetching recipe:', error)
+        console.error('error:', error)
         toast({
           title: "Error",
-          description: "Failed to load recipe. Please try again.",
+          description: "error ao buscar receita.",
           variant: "destructive",
         })
       } finally {
@@ -73,7 +74,7 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
     fetchRecipe()
   }, [resolvedParams.id, form])
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => { // envia os dados par aapi
     setIsSubmitting(true)
     try {
       const response = await fetch(`https://673bc4aa96b8dcd5f3f766c6.mockapi.io/api/receita/${resolvedParams.id}`, {
@@ -85,19 +86,19 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
       })
 
       if (!response.ok) {
-        throw new Error('Failed to update recipe')
+        throw new Error('falha ao atualizar receita')
       }
 
       toast({
         title: "Success",
-        description: "Recipe updated successfully!",
+        description: "alterada com sucesso!",
       })
       router.push('/')
     } catch (error) {
-      console.error('Error updating recipe:', error)
+      console.error('error:', error)
       toast({
         title: "Error",
-        description: "Failed to update recipe. Please try again.",
+        description: "falha ao buscar receita.",
         variant: "destructive",
       })
     } finally {
@@ -105,7 +106,7 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
     }
   }
 
-  if (isLoading) {
+  if (isLoading) { // carregamento para aguardar o get
     return (
       <div className="flex justify-center items-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
