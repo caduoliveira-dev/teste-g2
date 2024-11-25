@@ -74,7 +74,6 @@ export default function RecipeForm() {
             <div className='flex gap-2'>
 
             <FormField
-              control={form.control}
               name="titulo"
               render={({ field }) => (
                 <FormItem>
@@ -87,7 +86,6 @@ export default function RecipeForm() {
               )}
             />
             <FormField
-              control={form.control}
               name="tipo"
               render={({ field }) => (
                 <FormItem>
@@ -110,7 +108,6 @@ export default function RecipeForm() {
               )}
             />
             <FormField
-              control={form.control}
               name="num_pessoas"
               render={({ field }) => (
                 <FormItem>
@@ -130,7 +127,6 @@ export default function RecipeForm() {
             />
             </div>
             <FormField
-              control={form.control}
               name="nivel_dificuldade"
               render={({ field }) => (
                 <FormItem>
@@ -152,7 +148,6 @@ export default function RecipeForm() {
               )}
             />
             <FormField
-              control={form.control}
               name="lista_ingredientes"
               render={({ field }) => (
                 <FormItem>
@@ -169,7 +164,6 @@ export default function RecipeForm() {
               )}
             />
             <FormField
-              control={form.control}
               name="preparacao"
               render={({ field }) => (
                 <FormItem>

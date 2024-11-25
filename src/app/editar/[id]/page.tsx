@@ -114,6 +114,7 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
     )
   }
 
+  //name -> react-hook-form usa pra registrar o campo no estado do form
   return (
     <Card className="w-full max-w-2xl mx-auto mt-8">
       <CardHeader>
@@ -123,7 +124,6 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             <FormField
-              control={form.control}
               name="titulo"
               render={({ field }) => (
                 <FormItem>
@@ -136,7 +136,6 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
               )}
             />
             <FormField
-              control={form.control}
               name="tipo"
               render={({ field }) => (
                 <FormItem>
@@ -149,7 +148,6 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
               )}
             />
             <FormField
-              control={form.control}
               name="num_pessoas"
               render={({ field }) => (
                 <FormItem>
@@ -168,7 +166,6 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
               )}
             />
             <FormField
-              control={form.control}
               name="nivel_dificuldade"
               render={({ field }) => (
                 <FormItem>
@@ -190,7 +187,6 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
               )}
             />
             <FormField
-              control={form.control}
               name="lista_ingredientes"
               render={({ field }) => (
                 <FormItem>
@@ -207,7 +203,6 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
               )}
             />
             <FormField
-              control={form.control}
               name="preparacao"
               render={({ field }) => (
                 <FormItem>
