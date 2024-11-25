@@ -140,9 +140,19 @@ export default function EditarReceita({ params }: { params: Promise<{ id: string
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Tipo</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Digite o tipo da receita" {...field} />
-                  </FormControl>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o tipo de refeição" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="cafe">Café da Manhã</SelectItem>
+                      <SelectItem value="almoco">Almoço</SelectItem>
+                      <SelectItem value="jantar">Jantar</SelectItem>
+                      <SelectItem value="lanche">Lanche</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
